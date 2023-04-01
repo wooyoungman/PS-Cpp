@@ -9,14 +9,15 @@ int main()
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	int l;
-	long long sum = 0;
+	long long sum = 0,r=1;
 	string s;
 	cin >> l >> s;
 	for (int i = 0; i < l; i++)
 	{
 		// a의 아스키 값 97 이용
-		long long q = (long long)pow(31, i)%1234567891;
-		sum+= (int(s[i]) - 96) * q;
+
+		sum+= ((int(s[i]) - 96) * r)%1234567891;
+		r = (r * 31)%1234567891;
 	}
 	cout << sum;
 	return 0;
