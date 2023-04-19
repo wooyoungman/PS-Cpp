@@ -12,7 +12,7 @@ int main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 	cout.tie(0);
-	int n, m,cnt=0;
+	int n, m,cnt=0,len=0,temp=0;
 	string s, s1 = "I";
 	cin >> n >> m >> s;
 	for (int i = 0; i < n; i++)
@@ -20,16 +20,10 @@ int main()
 		s1.append("OI");
 	}
 
-	for (int i = 0; i < m; i++)
+	while (s.find(s1, len) != string::npos)
 	{
-		if (s[i] == 'I')
-		{
-			if (s.find(s1, i) != string::npos)
-			{
-				cnt++;
-				i = s.find(s1, i);
-			}
-		}
+		len = s.find(s1, len)+1;
+		cnt++;
 	}
 	cout << cnt;
 	return 0;
