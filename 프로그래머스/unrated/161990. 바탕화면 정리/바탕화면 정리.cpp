@@ -9,11 +9,11 @@ vector<int> solution(vector<string> wallpaper) {
     vector<int> answer;
     int lux=0,luy=0,rdx=0,rdy=0;
     int min_x=0,min_y=0,max_x=0,max_y=0;
-    int cnt=0;
+    bool check=false;
     for(int i=0;i<wallpaper.size();i++){
         for(int j=0;j<wallpaper[i].size();j++){
             if(wallpaper[i][j]=='#'){
-                if(cnt==0){
+                if(!check){
                     min_x=i;
                     min_y=j;
                     max_x=i+1;
@@ -33,7 +33,7 @@ vector<int> solution(vector<string> wallpaper) {
                         max_y=j+1;
                     }
                 }
-                cnt++;
+                check=true;
             }
         
         }
