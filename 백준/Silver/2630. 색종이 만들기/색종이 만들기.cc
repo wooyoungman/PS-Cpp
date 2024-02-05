@@ -1,57 +1,69 @@
-#include<iostream>
-#include<vector>
-#include<queue>
-#include<algorithm>
-#include<string>
-#include<map>
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
 using namespace std;
-int arr[130][130];
-int cnt[2];
 
-void dc(int x, int y, int size)
+int arr[128][128];
+int blue = 0;
+int white = 0;
+void func(int sy,int sx, int ey, int ex)
 {
-	bool check = false;
-	for (int i = x; i < x + size; i++)
+	//int state = -1;
+	int cnt = 0;
+	//printf("%d %d %d %d\n", sy, sx, ey, ex);
+	for (int i = sy; i < ey; i++)
 	{
-		for (int j = y; j < y + size; j++)
+		for (int j = sx; j < ex; j++)
 		{
-			if (arr[x][y] != arr[i][j])
-			{
-				check = true;
-				break;
-			}
-		}
-		if (check)
-		{
-			break;
+			cnt = cnt + arr[i][j];
 		}
 	}
-	if (!check)
+	if (cnt == (ey-sy) * (ex-sx))
 	{
-		cnt[arr[x][y]]++;
+		blue++;
 		return;
 	}
-	dc(x, y, size / 2);
-	dc(x + size / 2,y, size / 2);
-	dc(x, y + size / 2, size / 2);
-	dc(x + size / 2, y + size / 2, size / 2);
+	else if (cnt == 0)
+	{
+		white++;
+		return;
+	}
+	//4개로 divide
+
+	func(sy, sx, (ey+sy) /2, (ex+sx) / 2);
+
+	func((sy+ey)/2, sx, ey, (ex + sx) /2);
+
+	func(sy, (ex + sx) /2, (sy + ey) /2 , ex );
+
+	func((sy + ey) /2, (ex + sx) /2, ey, ex);
+
+
 }
 
-int main()
+
+int main() 
 {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-	int n,num;
-	cin >> n;
-	for (int i = 0; i < n; i++)
+	int N;
+	cin >> N;
+	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < n; j++)
+		for (int j = 0; j < N; j++)
 		{
-			cin >> arr[i][j];
+			scanf("%d", &arr[i][j]);
 		}
 	}
-	dc(0, 0, n);
-	cout << cnt[0] << "\n" << cnt[1] << "\n";
-	return 0;
+	func(0, 0, N, N);
+	cout << white << endl << blue;
+
+
+
 }
+
+
+
+
+
+
