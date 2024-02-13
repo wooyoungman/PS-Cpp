@@ -1,49 +1,76 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <stack>
 #include <vector>
+#include <string>
+#include <queue>
+#include <stack>
 #include <algorithm>
+#define INF 987654321
 using namespace std;
 
-vector <long long>tree_high;
+int tree[1000000];
 
-// 꼭 다시 풀어보기 이진 탐색 활용 문제로 아주 좋은거같음!
-
-int main() {
-	
-	long long n, m, temp, high, max_high;
-	cin >> n >> m;
-	for (int i = 0; i < n; i++)
+int N, M;
+int answer;
+void func(int start,int end)
+{
+	if (start > end)
 	{
-		cin >> high;
-		tree_high.push_back(high);
+		return;
 	}
-	// 최대 높이를 가진 나무의 중간값으로 시작하여
-	// 각 나무들에서 구할 수 있는 나무 자재 높이들의 합을 구하여
-	// 범위를 조절해 나가면 된다.
-	long long right = *max_element(tree_high.begin(), tree_high.end());
-	int left = 0;
-	long long mid;
-	while (left <= right)
+
+	int mid = (start + end) / 2;
+
+	long long sum = 0;
+	long long sum2 = 0;
+	for (int i = 0; i < N; i++)
 	{
-		temp = 0;
-		mid = (left + right) / 2;
-		for (int i = 0; i < n; i++)
+		if (tree[i] > mid)
 		{
-			if (tree_high[i] - mid > 0)
-			{
-				temp += (tree_high[i] - mid);
-			}
-		}
-		if (temp >= m)
-		{
-			max_high = mid;
-			left = mid + 1;
-		}
-		else
-		{
-			right = mid - 1;
+			sum = sum + tree[i] - mid;
 		}
 	}
-	cout << max_high;
-	return 0;
+
+	for (int i = 0; i < N; i++)
+	{
+		if (tree[i] > mid+1)
+		{
+			sum2 = sum2 + tree[i] - mid-1;
+		}
+	}
+
+	if (sum >= M && sum2 < M)
+	{
+		answer = mid;
+		return;
+	}
+	else if (sum>M )
+	{
+		func(mid + 1, end);
+	}
+	else
+	{
+		func(start, mid-1);
+	}
+
+
+
+
 }
+
+
+int main()
+{
+	cin >> N >> M;
+	
+	for (int i = 0; i < N; i++)
+	{
+		scanf("%d", &tree[i]);
+	}
+	func(1, 1000000000);
+	cout << answer;
+
+}
+
+
+
