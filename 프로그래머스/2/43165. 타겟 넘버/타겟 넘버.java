@@ -1,19 +1,20 @@
 class Solution {
+    int tar = 0;
     int answer = 0;
     public int solution(int[] numbers, int target) {
-        dfs(numbers,target,0,0);
+        tar = target;
+        dfs(1,numbers[0],numbers);
+        dfs(1,numbers[0]*(-1),numbers);
         return answer;
     }
-    private void dfs(int[] numbers,int target,int sum,int depth){
+
+    public void dfs(int depth,int sum,int [] numbers){
         if(depth==numbers.length){
-            if(sum==target){
-                answer++;
-            }
+            //System.out.println(sum);
+            if(sum==tar)answer++;
             return;
         }
-        else{
-            dfs(numbers,target,sum+numbers[depth],depth+1);
-            dfs(numbers,target,sum-numbers[depth],depth+1);
-        }
+        dfs(depth+1,sum+numbers[depth],numbers);
+        dfs(depth+1,sum+numbers[depth]*(-1),numbers);
     }
 }
