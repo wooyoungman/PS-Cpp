@@ -1,43 +1,51 @@
 #include<iostream>
 #include<vector>
+#include<algorithm>
+
 using namespace std;
 
-int n;
-int population[10001];
 
-vector<int>trees[10001];
-bool visited[10001];
-// 1번을 루트로, 각 마을에 대해 초기값 설정 (아래 2가지)
-	// 리프 노드까지 모두 값 설정 후 자신의 부모 노드를 채워가며 1번 노드까지 탐색
-// 현재 마을이 우수 마을인 경우
-// 현재 마을이 우수 마을이 아닌 경우
-int cur_best[10001];
-int cur_normal[10001];
-void func(int par) {
-	visited[par] = true;
-	cur_best[par] = population[par];
-	for (int i = 0; i < trees[par].size(); i++) {
-		int child = trees[par][i];
-		if (visited[child])continue;
-		func(child);
-		cur_best[par] += cur_normal[child];
-		cur_normal[par] += max(cur_best[child], cur_normal[child]);
+int n;
+
+int population[10050];
+vector<int>v[10050];
+int dp[10050][2];
+bool visited[10050];
+void findTree(int node) {
+	visited[node] = true;
+
+	dp[node][0] = population[node];
+	dp[node][1] = 0;
+	
+	for (int i = 0; i < v[node].size(); i++) {
+		int nextNode = v[node][i];
+		if (visited[nextNode])continue;
+		findTree(nextNode);
+
+		dp[node][0] += dp[nextNode][1];
+		dp[node][1] += max(dp[nextNode][0], dp[nextNode][1]);
 	}
 }
 
+void func() {
 
-int main() {
 	cin >> n;
+
 	for (int i = 1; i <= n; i++) {
 		cin >> population[i];
 	}
-	for (int i = 0; i < n - 1; i++) {
-		int s, e;
-		cin >> s >> e;
-		trees[s].push_back(e);
-		trees[e].push_back(s);
+	int a, b;
+	for (int i = 1; i < n; i++) {
+		cin >> a >> b;
+		v[a].push_back(b);
+		v[b].push_back(a);
 	}
-	func(1);
-	cout << max(cur_best[1], cur_normal[1]);
+
+	findTree(1);
+	cout << max(dp[1][0], dp[1][1]);
+}
+
+int main() {
+	func();
 	return 0;
 }
