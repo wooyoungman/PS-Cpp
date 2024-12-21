@@ -3,8 +3,8 @@
 #include <iostream>
 using namespace std;
 
-int solution(vector<int> diffs, vector<int> times, long long limit) {
-    int answer = 0;
+long long solution(vector<int> diffs, vector<int> times, long long limit) {
+    long long answer = 0;
     // 틀릴 때 마다 쓰는 시간 (cur + prev) + 푸는 데 쓰는 시간(cur)
     
     // 1. diff <= level : cur만 사용해서 해결
