@@ -12,10 +12,17 @@ int main() {
 	cin >> n;
 	for (int i = 1; i <= n; i++) {
 		cin >> days[i] >> profit[i]; 
-		dp[i + days[i]] = max(dp[i + days[i]], dp[i] + profit[i]);
-		dp[i + 1] = max(dp[i], dp[i + 1]);
 	}
 
+	for (int i = 1; i <= n+1; i++) {
+		// 이전 까지의 최대 이익 유지
+		dp[i] = max(dp[i], dp[i - 1]);
+
+		// 현재 상담 가능한 경우
+		if (i + days[i] <= n + 1) {
+			dp[i + days[i]] = max(dp[i + days[i]], dp[i] + profit[i]);
+		}
+	}
 	cout << dp[n + 1];
 	return 0;
 }
