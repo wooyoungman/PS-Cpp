@@ -1,119 +1,57 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <vector>
-#include <string>
-#include <queue>
-#include <stack>
-#include <algorithm>
-#define INF 987654321
+#include <cstring>
 using namespace std;
 
-int dx[4] = { 0,1,0,-1 };
-int dy[4] = { 1,0,-1,0 };
+int arr[501][501];
+int dp[501][501]; // dp[y][x] : (y,x)에서 목표 지점으로 갈 수 있는 경로의 개수
+// 문제 예제에서는 dp[1][1] = dp[1][2] + dp[2][1] 
+int n, m;
 
-int N, M;
-int map[501][501];
-int visit[501][501];
-stack<pair<int, int>> q;
+int dy[4] = { 1,-1,0,0 };
+int dx[4] = { 0,0,1,-1 };
 
-int cnt;
-
-int state = 0;
-int dcnt;
-int dfs(int y,int x)
-{
-	
-	
-	int temp;
-	if (y == N - 1 && x == M - 1)
-	{
-		return 1;
-	}
-
-	for (int i = 0; i < 4; i++)
-	{
-		int ny = dy[i] + y;
-		int nx = dx[i] + x;
-
-
-		if (nx<0 || ny<0 || nx>M - 1 || ny>N - 1) continue;
-
-		if (map[ny][nx] >= map[y][x]) continue;
-
-		if (visit[ny][nx] == -1) continue;
-
-		if (visit[ny][nx] > 0)
-		{
-			visit[y][x] += visit[ny][nx];
-			continue;
-		}
-
-		temp=dfs(ny, nx);
-
-		if (temp != -1)
-		{
-			visit[y][x] = visit[y][x] + temp;
-		}
-
-
-	}
-
-	if (visit[y][x] > 0)
-	{
-		return visit[y][x];
-	}
-	else
-	{
-		visit[y][x] = -1;
-		return -1;
-	}
-
+bool isValid(int y, int x) {
+	return y >= 1 && x >= 1 && y <= n && x <= m;
 }
 
+int dfs(int y, int x) {
+	// 탈출 조건 (목표 지점 도착) -> 경로 1개 찾음
+	if (y == n && x == m)return 1;
 
+	
+	// 미방문 시 계속 탐색
+	if (dp[y][x] == -1) {
+		dp[y][x] = 0;
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dy[i];
+			int nx = x + dx[i];
 
-int main()
-{
-	cin >> N >> M;
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < M; j++)
-		{
-			scanf("%d", &map[i][j]);
+			if (!isValid(ny, nx))continue;
+
+			int ch = arr[y][x];
+			int nh = arr[ny][nx];
+
+			if (ch <= nh)continue;
+
+			dp[y][x] += dfs(ny, nx);
+
 		}
-	}
-	int temp;
-	if (N == 1 && M == 1)
-	{
-		cout << 1;
-	}
-	else
-	{
-		temp=dfs(0, 0);
-		if (temp == -1)
-		{
-			cout << 0;
-		}
-		else
-		{
-			cout << visit[0][0];
-		}
+		
 	}
 
-	/*
-	cout << endl;
-
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < M; j++)
-		{
-			printf("%d ", visit[i][j]);
-		}
-		printf("\n");
-	}*/
+	// 이미 방문한 곳이면 현재 경로의 개수 반환
+	return dp[y][x];
 }
 
-
-
-
-
+int main() {
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			cin >> arr[i][j];
+		}
+	}
+	// 경로 압축
+	memset(dp, -1, sizeof(dp));
+	cout<<dfs(1, 1);
+	return 0;
+}
